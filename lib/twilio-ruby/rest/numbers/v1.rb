@@ -23,12 +23,14 @@ module Twilio
                     @version = 'v1'
                     @bulk_eligibilities = nil
                     @eligibilities = nil
+                    @embedded_sessions = nil
                     @porting_all_port_ins = nil
                     @porting_port_ins = nil
                     @porting_port_in_phone_number = nil
                     @porting_portabilities = nil
                     @porting_webhook_configurations = nil
                     @porting_webhook_configurations_delete = nil
+                    @sender_id_registrations = nil
                     @signing_request_configurations = nil
                     @webhook = nil
                 end
@@ -51,6 +53,11 @@ module Twilio
                 # @return [Twilio::REST::Numbers::V1::EligibilityList]
                 def eligibilities
                     @eligibilities ||= EligibilityList.new self
+                end
+                ##
+                # @return [Twilio::REST::Numbers::V1::EmbeddedSessionList]
+                def embedded_sessions
+                    @embedded_sessions ||= EmbeddedSessionList.new self
                 end
                 ##
                 # @return [Twilio::REST::Numbers::V1::PortingAllPortInList]
@@ -139,6 +146,11 @@ module Twilio
                     else
                         PortingWebhookConfigurationDeleteContext.new(self, webhook_type)
                     end
+                end
+                ##
+                # @return [Twilio::REST::Numbers::V1::SenderIdRegistrationList]
+                def sender_id_registrations
+                    @sender_id_registrations ||= SenderIdRegistrationList.new self
                 end
                 ##
                 # @return [Twilio::REST::Numbers::V1::SigningRequestConfigurationList]

@@ -21,6 +21,135 @@ module Twilio
 
                      class UserList < ListResource
                 
+                    class ScimPatchOperation
+                            # @param [op]: [String] The operation to perform
+                            # @param [path]: [String] 
+                            # @param [value]: [Hash] 
+                        attr_accessor :op, :path, :value
+                        def initialize(payload)
+                                @op = payload["op"]
+                                @path = payload["path"]
+                                @value = payload["value"]
+                        end
+                        def to_json(options = {})
+                        {
+                                "op": @op,
+                                "path": @path,
+                                "value": @value,
+                        }.to_json(options)
+                        end
+                    end
+
+                    class ScimPatchRequest
+                            # @param [schemas]: [Array<String>] 
+                            # @param [operations]: [Array<UserList.ScimPatchOperation>] 
+                        attr_accessor :schemas, :operations
+                        def initialize(payload)
+                                @schemas = payload["schemas"]
+                                @operations = payload["operations"]
+                        end
+                        def to_json(options = {})
+                        {
+                                "schemas": @schemas,
+                                "Operations": @operations,
+                        }.to_json(options)
+                        end
+                    end
+
+                    class ScimUser
+                            # @param [id]: [String] Unique Twilio user sid
+                            # @param [external_id]: [String] External unique resource id defined by provisioning client
+                            # @param [user_name]: [String] Unique username, MUST be same as primary email address
+                            # @param [display_name]: [String] User friendly display name
+                            # @param [name]: [UserList.ScimName] 
+                            # @param [emails]: [Array<UserList.ScimEmailAddress>] Email address list of the user. Primary email must be defined if there are more than 1 email. Primary email must match the username.
+                            # @param [active]: [Boolean] Indicates whether the user is active
+                            # @param [locale]: [String] User's locale
+                            # @param [timezone]: [String] User's time zone
+                            # @param [schemas]: [Array<String>] An array of URIs that indicate the schemas supported for this user resource
+                            # @param [meta]: [UserList.ScimMeta] 
+                            # @param [detail]: [String] A human-readable description of the error
+                            # @param [scim_type]: [String] A scimType error code as defined in RFC7644
+                            # @param [status]: [String] Http status code
+                            # @param [code]: [String] Twilio-specific error code
+                            # @param [more_info]: [String] Link to Error Code References
+                        attr_accessor :id, :external_id, :user_name, :display_name, :name, :emails, :active, :locale, :timezone, :schemas, :meta, :detail, :scim_type, :status, :code, :more_info
+                        def initialize(payload)
+                                @id = payload["id"]
+                                @external_id = payload["external_id"]
+                                @user_name = payload["user_name"]
+                                @display_name = payload["display_name"]
+                                @name = payload["name"]
+                                @emails = payload["emails"]
+                                @active = payload["active"]
+                                @locale = payload["locale"]
+                                @timezone = payload["timezone"]
+                                @schemas = payload["schemas"]
+                                @meta = payload["meta"]
+                                @detail = payload["detail"]
+                                @scim_type = payload["scim_type"]
+                                @status = payload["status"]
+                                @code = payload["code"]
+                                @more_info = payload["more_info"]
+                        end
+                        def to_json(options = {})
+                        {
+                                "id": @id,
+                                "externalId": @external_id,
+                                "userName": @user_name,
+                                "displayName": @display_name,
+                                "name": @name,
+                                "emails": @emails,
+                                "active": @active,
+                                "locale": @locale,
+                                "timezone": @timezone,
+                                "schemas": @schemas,
+                                "meta": @meta,
+                                "detail": @detail,
+                                "scimType": @scim_type,
+                                "status": @status,
+                                "code": @code,
+                                "moreInfo": @more_info,
+                        }.to_json(options)
+                        end
+                    end
+
+
+                    class ScimPatchOperation
+                            # @param [op]: [String] The operation to perform
+                            # @param [path]: [String] 
+                            # @param [value]: [Hash] 
+                        attr_accessor :op, :path, :value
+                        def initialize(payload)
+                                @op = payload["op"]
+                                @path = payload["path"]
+                                @value = payload["value"]
+                        end
+                        def to_json(options = {})
+                        {
+                                "op": @op,
+                                "path": @path,
+                                "value": @value,
+                        }.to_json(options)
+                        end
+                    end
+
+                    class ScimPatchRequest
+                            # @param [schemas]: [Array<String>] 
+                            # @param [operations]: [Array<UserList.ScimPatchOperation>] 
+                        attr_accessor :schemas, :operations
+                        def initialize(payload)
+                                @schemas = payload["schemas"]
+                                @operations = payload["operations"]
+                        end
+                        def to_json(options = {})
+                        {
+                                "schemas": @schemas,
+                                "Operations": @operations,
+                        }.to_json(options)
+                        end
+                    end
+
                     class ScimUser
                             # @param [id]: [String] Unique Twilio user sid
                             # @param [external_id]: [String] External unique resource id defined by provisioning client
@@ -348,6 +477,60 @@ module Twilio
                         headers['Accept'] = 'application/scim+json'
                         
                         response = @version.fetch_with_metadata('GET', @uri, headers: headers)
+                        user_instance = UserInstance.new(
+                            @version,
+                            response.body,
+                            organization_sid: @solution[:organization_sid],
+                            id: @solution[:id],
+                        )
+                        UserInstanceMetadata.new(
+                            @version,
+                            user_instance,
+                            response.headers,
+                            response.status_code
+                        )
+                    end
+
+                    ##
+                    # Patch the UserInstance
+                    # @param [String] if_match 
+                    # @param [ScimPatchRequest] scim_patch_request 
+                    # @return [UserInstance] Patched UserInstance
+                    def patch(
+                        if_match: :unset,scim_patch_request: nil
+                    )
+
+                        headers = Twilio::Values.of({'Content-Type' => 'application/x-www-form-urlencoded', 'If-Match' => if_match, })
+                        
+                        headers['Content-Type'] = 'application/scim+json'
+                        
+                        headers['Accept'] = 'application/scim+json'
+                        
+                        payload = @version.patch('PATCH', @uri, headers: headers, data: scim_patch_request.to_json)
+                        UserInstance.new(
+                            @version,
+                            payload,
+                            organization_sid: @solution[:organization_sid],
+                            id: @solution[:id],
+                        )
+                    end
+
+                    ##
+                    # Patch the UserInstanceMetadata
+                    # @param [String] if_match 
+                    # @param [ScimPatchRequest] scim_patch_request 
+                    # @return [UserInstance] Patchd UserInstance
+                    def patch_with_metadata(
+                      if_match: :unset,scim_patch_request: nil
+                    )
+
+                        headers = Twilio::Values.of({'Content-Type' => 'application/x-www-form-urlencoded', 'If-Match' => if_match, })
+                        
+                        headers['Content-Type'] = 'application/scim+json'
+                        
+                        headers['Accept'] = 'application/scim+json'
+                        
+                        response = @version.patch_with_metadata('PATCH', @uri, headers: headers, data: scim_patch_request.to_json)
                         user_instance = UserInstance.new(
                             @version,
                             response.body,
@@ -728,6 +911,20 @@ module Twilio
                     def fetch
 
                         context.fetch
+                    end
+
+                    ##
+                    # Patch the UserInstance
+                    # @param [String] if_match 
+                    # @param [ScimPatchRequest] scim_patch_request 
+                    # @return [UserInstance] Patched UserInstance
+                    def patch(
+                        if_match: :unset,scim_patch_request: nil
+                    )
+
+                        context.patch(
+                            if_match: if_match, 
+                        )
                     end
 
                     ##

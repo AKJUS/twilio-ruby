@@ -613,6 +613,7 @@ module Twilio
                         @properties = { 
                             'sid' => payload['sid'],
                             'account_sid' => payload['account_sid'],
+                            'author_sid' => payload['author_sid'],
                             'friendly_name' => payload['friendly_name'],
                             'definition' => payload['definition'],
                             'status' => payload['status'],
@@ -654,6 +655,12 @@ module Twilio
                     # @return [String] The SID of the [Account](https://www.twilio.com/docs/iam/api/account) that created the Flow resource.
                     def account_sid
                         @properties['account_sid']
+                    end
+                    
+                    ##
+                    # @return [String] The SID of the User that created or last updated the Flow.
+                    def author_sid
+                        @properties['author_sid']
                     end
                     
                     ##

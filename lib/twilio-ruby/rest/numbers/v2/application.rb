@@ -131,6 +131,11 @@ module Twilio
                     # Lists ApplicationInstance records from the API as a list.
                     # Unlike stream(), this operation is eager and will load `limit` records into
                     # memory before returning.
+                    # @param [String] account_sid The Account SID to filter by.
+                    # @param [String] iso_country The ISO country to filter by.
+                    # @param [String] status The application status to filter by.
+                    # @param [String] friendly_name The friendly name to filter by.
+                    # @param [String] sid The application SID to filter by.
                     # @param [Integer] limit Upper limit for the number of records to return. stream()
                     #    guarantees to never return more than limit.  Default is no limit
                     # @param [Integer] page_size Number of records to fetch per request, when
@@ -138,8 +143,13 @@ module Twilio
                     #    but a limit is defined, stream() will attempt to read the limit with the most
                     #    efficient page size, i.e. min(limit, 1000)
                     # @return [Array] Array of up to limit results
-                    def list(limit: nil, page_size: nil)
+                    def list(account_sid: :unset, iso_country: :unset, status: :unset, friendly_name: :unset, sid: :unset, limit: nil, page_size: nil)
                         self.stream(
+                            account_sid: account_sid,
+                            iso_country: iso_country,
+                            status: status,
+                            friendly_name: friendly_name,
+                            sid: sid,
                             limit: limit,
                             page_size: page_size
                         ).entries
@@ -149,6 +159,11 @@ module Twilio
                     # Streams Instance records from the API as an Enumerable.
                     # This operation lazily loads records as efficiently as possible until the limit
                     # is reached.
+                    # @param [String] account_sid The Account SID to filter by.
+                    # @param [String] iso_country The ISO country to filter by.
+                    # @param [String] status The application status to filter by.
+                    # @param [String] friendly_name The friendly name to filter by.
+                    # @param [String] sid The application SID to filter by.
                     # @param [Integer] limit Upper limit for the number of records to return. stream()
                     #    guarantees to never return more than limit.  Default is no limit
                     # @param [Integer] page_size Number of records to fetch per request, when
@@ -156,10 +171,15 @@ module Twilio
                     #    but a limit is defined, stream() will attempt to read the limit with the most
                     #    efficient page size, i.e. min(limit, 1000)
                     # @return [Enumerable] Enumerable that will yield up to limit results
-                    def stream(limit: nil, page_size: nil)
+                    def stream(account_sid: :unset, iso_country: :unset, status: :unset, friendly_name: :unset, sid: :unset, limit: nil, page_size: nil)
                         limits = @version.read_limits(limit, page_size)
 
                         page = self.page(
+                            account_sid: account_sid,
+                            iso_country: iso_country,
+                            status: status,
+                            friendly_name: friendly_name,
+                            sid: sid,
                             page_size: limits[:page_size], )
 
                         @version.stream(page, limit: limits[:limit], page_limit: limits[:page_limit])
@@ -167,6 +187,11 @@ module Twilio
 
                     ##
                     # Lists ApplicationPageMetadata records from the API as a list.
+                      # @param [String] account_sid The Account SID to filter by.
+                      # @param [String] iso_country The ISO country to filter by.
+                      # @param [String] status The application status to filter by.
+                      # @param [String] friendly_name The friendly name to filter by.
+                      # @param [String] sid The application SID to filter by.
                     # @param [Integer] limit Upper limit for the number of records to return. stream()
                     #    guarantees to never return more than limit.  Default is no limit
                     # @param [Integer] page_size Number of records to fetch per request, when
@@ -174,9 +199,14 @@ module Twilio
                     #    but a limit is defined, stream() will attempt to read the limit with the most
                     #    efficient page size, i.e. min(limit, 1000)
                     # @return [Array] Array of up to limit results
-                    def list_with_metadata(limit: nil, page_size: nil)
+                    def list_with_metadata(account_sid: :unset, iso_country: :unset, status: :unset, friendly_name: :unset, sid: :unset, limit: nil, page_size: nil)
                         limits = @version.read_limits(limit, page_size)
                         params = Twilio::Values.of({
+                            'AccountSid' => account_sid,
+                            'IsoCountry' => iso_country,
+                            'Status' => status,
+                            'FriendlyName' => friendly_name,
+                            'Sid' => sid,
                             
                             'PageSize' => limits[:page_size],
                         });
@@ -204,12 +234,22 @@ module Twilio
                     ##
                     # Retrieve a single page of ApplicationInstance records from the API.
                     # Request is executed immediately.
+                    # @param [String] account_sid The Account SID to filter by.
+                    # @param [String] iso_country The ISO country to filter by.
+                    # @param [String] status The application status to filter by.
+                    # @param [String] friendly_name The friendly name to filter by.
+                    # @param [String] sid The application SID to filter by.
                     # @param [String] page_token PageToken provided by the API
                     # @param [Integer] page_number Page Number, this value is simply for client state
                     # @param [Integer] page_size Number of records to return, defaults to 50
                     # @return [Page] Page of ApplicationInstance
-                    def page(page_token: :unset, page_number: :unset,page_size: :unset)
+                    def page(account_sid: :unset, iso_country: :unset, status: :unset, friendly_name: :unset, sid: :unset, page_token: :unset, page_number: :unset,page_size: :unset)
                         params = Twilio::Values.of({
+                            'AccountSid' => account_sid,
+                            'IsoCountry' => iso_country,
+                            'Status' => status,
+                            'FriendlyName' => friendly_name,
+                            'Sid' => sid,
                             'PageToken' => page_token,
                             'Page' => page_number,
                             'PageSize' => page_size,
@@ -474,11 +514,26 @@ module Twilio
                         # Marshaled Properties
                         @properties = { 
                             'sid' => payload['sid'],
-                            'bundle_sid' => payload['bundle_sid'],
                             'application_requirements_sid' => payload['application_requirements_sid'],
+                            'application_requirements_version' => payload['application_requirements_version'] == nil ? payload['application_requirements_version'] : payload['application_requirements_version'].to_i,
+                            'account_sid' => payload['account_sid'],
+                            'bundle_sid' => payload['bundle_sid'],
+                            'reviewer' => payload['reviewer'],
+                            'zendesk_ticket_id' => payload['zendesk_ticket_id'],
                             'friendly_name' => payload['friendly_name'],
+                            'notification_emails' => payload['notification_emails'],
                             'iso_country' => payload['iso_country'],
                             'state' => payload['state'],
+                            'setup' => payload['setup'],
+                            'business_information' => payload['business_information'],
+                            'user_sign_up' => payload['user_sign_up'],
+                            'compliance_keywords' => payload['compliance_keywords'],
+                            'content_examples' => payload['content_examples'],
+                            'sms_campaign_details' => payload['sms_campaign_details'],
+                            'date_created' => Twilio.deserialize_iso8601_datetime(payload['date_created']),
+                            'date_updated' => Twilio.deserialize_iso8601_datetime(payload['date_updated']),
+                            'created_by' => payload['created_by'],
+                            'updated_by' => payload['updated_by'],
                         }
 
                         # Context
@@ -504,21 +559,51 @@ module Twilio
                     end
                     
                     ##
-                    # @return [String] The Bundle SID for regulatory compliance.
-                    def bundle_sid
-                        @properties['bundle_sid']
-                    end
-                    
-                    ##
                     # @return [String] The Application Requirements SID.
                     def application_requirements_sid
                         @properties['application_requirements_sid']
                     end
                     
                     ##
+                    # @return [String] The version of the application requirements.
+                    def application_requirements_version
+                        @properties['application_requirements_version']
+                    end
+                    
+                    ##
+                    # @return [String] The Account SID associated with the application.
+                    def account_sid
+                        @properties['account_sid']
+                    end
+                    
+                    ##
+                    # @return [String] The Bundle SID for regulatory compliance.
+                    def bundle_sid
+                        @properties['bundle_sid']
+                    end
+                    
+                    ##
+                    # @return [String] The reviewer of the application.
+                    def reviewer
+                        @properties['reviewer']
+                    end
+                    
+                    ##
+                    # @return [String] The Zendesk ticket ID associated with the application.
+                    def zendesk_ticket_id
+                        @properties['zendesk_ticket_id']
+                    end
+                    
+                    ##
                     # @return [String] The friendly name of the application.
                     def friendly_name
                         @properties['friendly_name']
+                    end
+                    
+                    ##
+                    # @return [Array<String>] The notification emails for the application.
+                    def notification_emails
+                        @properties['notification_emails']
                     end
                     
                     ##
@@ -531,6 +616,66 @@ module Twilio
                     # @return [String] The state of the application.
                     def state
                         @properties['state']
+                    end
+                    
+                    ##
+                    # @return [CreateShortCodeApplicationResponseSetup] 
+                    def setup
+                        @properties['setup']
+                    end
+                    
+                    ##
+                    # @return [CreateShortCodeApplicationResponseBusinessInformation] 
+                    def business_information
+                        @properties['business_information']
+                    end
+                    
+                    ##
+                    # @return [CreateShortCodeApplicationResponseUserSignUp] 
+                    def user_sign_up
+                        @properties['user_sign_up']
+                    end
+                    
+                    ##
+                    # @return [CreateShortCodeApplicationResponseComplianceKeywords] 
+                    def compliance_keywords
+                        @properties['compliance_keywords']
+                    end
+                    
+                    ##
+                    # @return [CreateShortCodeApplicationResponseContentExamples] 
+                    def content_examples
+                        @properties['content_examples']
+                    end
+                    
+                    ##
+                    # @return [CreateShortCodeApplicationResponseSmsCampaignDetails] 
+                    def sms_campaign_details
+                        @properties['sms_campaign_details']
+                    end
+                    
+                    ##
+                    # @return [Time] The date and time the application was created.
+                    def date_created
+                        @properties['date_created']
+                    end
+                    
+                    ##
+                    # @return [Time] The date and time the application was last updated.
+                    def date_updated
+                        @properties['date_updated']
+                    end
+                    
+                    ##
+                    # @return [String] The identity of the user who created the application.
+                    def created_by
+                        @properties['created_by']
+                    end
+                    
+                    ##
+                    # @return [String] The identity of the user who last updated the application.
+                    def updated_by
+                        @properties['updated_by']
                     end
                     
                     ##

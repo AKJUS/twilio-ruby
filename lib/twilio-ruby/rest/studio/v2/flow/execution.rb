@@ -597,6 +597,8 @@ module Twilio
                             'account_sid' => payload['account_sid'],
                             'flow_sid' => payload['flow_sid'],
                             'contact_channel_address' => payload['contact_channel_address'],
+                            'contact_sid' => payload['contact_sid'],
+                            'flow_version' => payload['flow_version'] == nil ? payload['flow_version'] : payload['flow_version'].to_i,
                             'context' => payload['context'],
                             'status' => payload['status'],
                             'date_created' => Twilio.deserialize_iso8601_datetime(payload['date_created']),
@@ -643,6 +645,18 @@ module Twilio
                     # @return [String] The phone number, SIP address or Client identifier that triggered the Execution. Phone numbers are in E.164 format (e.g. +16175551212). SIP addresses are formatted as `name@company.com`. Client identifiers are formatted `client:name`.
                     def contact_channel_address
                         @properties['contact_channel_address']
+                    end
+                    
+                    ##
+                    # @return [String] The SID of the Contact.
+                    def contact_sid
+                        @properties['contact_sid']
+                    end
+                    
+                    ##
+                    # @return [String] The Flow version number at the time of Execution creation.
+                    def flow_version
+                        @properties['flow_version']
                     end
                     
                     ##
