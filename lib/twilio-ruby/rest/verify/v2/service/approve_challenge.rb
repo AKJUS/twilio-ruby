@@ -243,7 +243,6 @@ module Twilio
                         
                         # Marshaled Properties
                         @properties = { 
-                            'options' => payload['options'],
                             'sid' => payload['sid'],
                             'account_sid' => payload['account_sid'],
                             'service_sid' => payload['service_sid'],
@@ -262,15 +261,10 @@ module Twilio
                             'factor_type' => payload['factor_type'],
                             'url' => payload['url'],
                             'links' => payload['links'],
+                            'options' => payload['options'],
                         }
                     end
 
-                    
-                    ##
-                    # @return [Hash] An object that contains challenge options. Currently only used for `passkeys`.
-                    def options
-                        @properties['options']
-                    end
                     
                     ##
                     # @return [String] A 34 character string that uniquely identifies this Challenge.
@@ -378,6 +372,12 @@ module Twilio
                     # @return [Hash] Contains a dictionary of URL links to nested resources of this Challenge.
                     def links
                         @properties['links']
+                    end
+                    
+                    ##
+                    # @return [Hash] An object that contains challenge options. Currently only used for `passkeys`.
+                    def options
+                        @properties['options']
                     end
                     
                     ##

@@ -52,6 +52,7 @@ module Twilio
                     # @param [String] intelligence_service The SID or unique name of the [Intelligence Service](https://www.twilio.com/docs/conversational-intelligence/api/service-resource) for persisting transcripts and running post-call Language Operators
                     # @param [String] conversation_configuration The ID of the Conversations Configuration for customizing conversation behavior in Intelligence Service
                     # @param [String] conversation_id The ID of the Conversation for associating this Transcription with an existing Conversation in Intelligence Service
+                    # @param [String] configuration_id The ID of the RealTimeTranscription Configuration for configuring all the non-default behaviors in one go.
                     # @param [Boolean] enable_provider_data Whether the callback includes raw provider data.
                     # @return [TranscriptionInstance] Created TranscriptionInstance
                     def create(
@@ -71,6 +72,7 @@ module Twilio
                         intelligence_service: :unset, 
                         conversation_configuration: :unset, 
                         conversation_id: :unset, 
+                        configuration_id: :unset, 
                         enable_provider_data: :unset
                     )
 
@@ -91,6 +93,7 @@ module Twilio
                             'IntelligenceService' => intelligence_service,
                             'ConversationConfiguration' => conversation_configuration,
                             'ConversationId' => conversation_id,
+                            'ConfigurationId' => configuration_id,
                             'EnableProviderData' => enable_provider_data,
                         })
 
@@ -127,6 +130,7 @@ module Twilio
                     # @param [String] intelligence_service The SID or unique name of the [Intelligence Service](https://www.twilio.com/docs/conversational-intelligence/api/service-resource) for persisting transcripts and running post-call Language Operators
                     # @param [String] conversation_configuration The ID of the Conversations Configuration for customizing conversation behavior in Intelligence Service
                     # @param [String] conversation_id The ID of the Conversation for associating this Transcription with an existing Conversation in Intelligence Service
+                    # @param [String] configuration_id The ID of the RealTimeTranscription Configuration for configuring all the non-default behaviors in one go.
                     # @param [Boolean] enable_provider_data Whether the callback includes raw provider data.
                     # @return [TranscriptionInstance] Created TranscriptionInstance
                     def create_with_metadata(
@@ -146,6 +150,7 @@ module Twilio
                       intelligence_service: :unset, 
                       conversation_configuration: :unset, 
                       conversation_id: :unset, 
+                      configuration_id: :unset, 
                       enable_provider_data: :unset
                     )
 
@@ -166,6 +171,7 @@ module Twilio
                             'IntelligenceService' => intelligence_service,
                             'ConversationConfiguration' => conversation_configuration,
                             'ConversationId' => conversation_id,
+                            'ConfigurationId' => configuration_id,
                             'EnableProviderData' => enable_provider_data,
                         })
 

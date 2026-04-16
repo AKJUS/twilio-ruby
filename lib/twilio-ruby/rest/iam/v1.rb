@@ -25,6 +25,7 @@ module Twilio
                     @get_api_keys = nil
                     @new_api_key = nil
                     @o_auth_apps = nil
+                    @role_permission = nil
                     @token = nil
                 end
 
@@ -65,6 +66,11 @@ module Twilio
                     else
                         OAuthAppContext.new(self, sid)
                     end
+                end
+                ##
+                # @return [Twilio::REST::Iam::V1::RolePermissionList]
+                def role_permission
+                    @role_permission ||= RolePermissionList.new self
                 end
                 ##
                 # @return [Twilio::REST::Iam::V1::TokenList]

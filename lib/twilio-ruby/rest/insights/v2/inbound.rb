@@ -39,17 +39,17 @@ module Twilio
                     end
 
                     class InsightsV2CreatePhoneNumbersReportRequestTimeRange
-                            # @param [start_time]: [Time] Start time of the report
-                            # @param [end_time]: [Time] End time of the report
-                        attr_accessor :start_time, :end_time
+                            # @param [start_datetime]: [Time] Start date time of the report
+                            # @param [end_datetime]: [Time] End date time of the report
+                        attr_accessor :start_datetime, :end_datetime
                         def initialize(payload)
-                                @start_time = payload["start_time"]
-                                @end_time = payload["end_time"]
+                                @start_datetime = payload["start_datetime"]
+                                @end_datetime = payload["end_datetime"]
                         end
                         def to_json(options = {})
                         {
-                                "start_time": @start_time,
-                                "end_time": @end_time,
+                                "start_datetime": @start_datetime,
+                                "end_datetime": @end_datetime,
                         }.to_json(options)
                         end
                     end

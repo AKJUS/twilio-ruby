@@ -108,6 +108,7 @@ module Twilio
                     # Lists ExecutionInstance records from the API as a list.
                     # Unlike stream(), this operation is eager and will load `limit` records into
                     # memory before returning.
+                    # @param [Status] status Only show Execution resources with the given status. Can be: `active` or `ended`.
                     # @param [Time] date_created_from Only show Execution resources starting on or after this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                     # @param [Time] date_created_to Only show Execution resources starting before this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                     # @param [Integer] limit Upper limit for the number of records to return. stream()
@@ -117,8 +118,9 @@ module Twilio
                     #    but a limit is defined, stream() will attempt to read the limit with the most
                     #    efficient page size, i.e. min(limit, 1000)
                     # @return [Array] Array of up to limit results
-                    def list(date_created_from: :unset, date_created_to: :unset, limit: nil, page_size: nil)
+                    def list(status: :unset, date_created_from: :unset, date_created_to: :unset, limit: nil, page_size: nil)
                         self.stream(
+                            status: status,
                             date_created_from: date_created_from,
                             date_created_to: date_created_to,
                             limit: limit,
@@ -130,6 +132,7 @@ module Twilio
                     # Streams Instance records from the API as an Enumerable.
                     # This operation lazily loads records as efficiently as possible until the limit
                     # is reached.
+                    # @param [Status] status Only show Execution resources with the given status. Can be: `active` or `ended`.
                     # @param [Time] date_created_from Only show Execution resources starting on or after this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                     # @param [Time] date_created_to Only show Execution resources starting before this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                     # @param [Integer] limit Upper limit for the number of records to return. stream()
@@ -139,10 +142,11 @@ module Twilio
                     #    but a limit is defined, stream() will attempt to read the limit with the most
                     #    efficient page size, i.e. min(limit, 1000)
                     # @return [Enumerable] Enumerable that will yield up to limit results
-                    def stream(date_created_from: :unset, date_created_to: :unset, limit: nil, page_size: nil)
+                    def stream(status: :unset, date_created_from: :unset, date_created_to: :unset, limit: nil, page_size: nil)
                         limits = @version.read_limits(limit, page_size)
 
                         page = self.page(
+                            status: status,
                             date_created_from: date_created_from,
                             date_created_to: date_created_to,
                             page_size: limits[:page_size], )
@@ -152,6 +156,7 @@ module Twilio
 
                     ##
                     # Lists ExecutionPageMetadata records from the API as a list.
+                      # @param [Status] status Only show Execution resources with the given status. Can be: `active` or `ended`.
                       # @param [Time] date_created_from Only show Execution resources starting on or after this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                       # @param [Time] date_created_to Only show Execution resources starting before this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                     # @param [Integer] limit Upper limit for the number of records to return. stream()
@@ -161,9 +166,10 @@ module Twilio
                     #    but a limit is defined, stream() will attempt to read the limit with the most
                     #    efficient page size, i.e. min(limit, 1000)
                     # @return [Array] Array of up to limit results
-                    def list_with_metadata(date_created_from: :unset, date_created_to: :unset, limit: nil, page_size: nil)
+                    def list_with_metadata(status: :unset, date_created_from: :unset, date_created_to: :unset, limit: nil, page_size: nil)
                         limits = @version.read_limits(limit, page_size)
                         params = Twilio::Values.of({
+                            'status' => status,
                             'DateCreatedFrom' =>  Twilio.serialize_iso8601_datetime(date_created_from),
                             'DateCreatedTo' =>  Twilio.serialize_iso8601_datetime(date_created_to),
                             
@@ -193,14 +199,16 @@ module Twilio
                     ##
                     # Retrieve a single page of ExecutionInstance records from the API.
                     # Request is executed immediately.
+                    # @param [Status] status Only show Execution resources with the given status. Can be: `active` or `ended`.
                     # @param [Time] date_created_from Only show Execution resources starting on or after this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                     # @param [Time] date_created_to Only show Execution resources starting before this [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time, given as `YYYY-MM-DDThh:mm:ss-hh:mm`.
                     # @param [String] page_token PageToken provided by the API
                     # @param [Integer] page_number Page Number, this value is simply for client state
                     # @param [Integer] page_size Number of records to return, defaults to 50
                     # @return [Page] Page of ExecutionInstance
-                    def page(date_created_from: :unset, date_created_to: :unset, page_token: :unset, page_number: :unset,page_size: :unset)
+                    def page(status: :unset, date_created_from: :unset, date_created_to: :unset, page_token: :unset, page_number: :unset,page_size: :unset)
                         params = Twilio::Values.of({
+                            'status' => status,
                             'DateCreatedFrom' =>  Twilio.serialize_iso8601_datetime(date_created_from),
                             'DateCreatedTo' =>  Twilio.serialize_iso8601_datetime(date_created_to),
                             'PageToken' => page_token,
@@ -603,6 +611,7 @@ module Twilio
                             'status' => payload['status'],
                             'date_created' => Twilio.deserialize_iso8601_datetime(payload['date_created']),
                             'date_updated' => Twilio.deserialize_iso8601_datetime(payload['date_updated']),
+                            'initiated_by' => payload['initiated_by'],
                             'url' => payload['url'],
                             'links' => payload['links'],
                         }
@@ -681,6 +690,12 @@ module Twilio
                     # @return [Time] The date and time in GMT when the resource was last updated specified in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
                     def date_updated
                         @properties['date_updated']
+                    end
+                    
+                    ##
+                    # @return [String] The SID or identifier that triggered this Execution. For example, a Call SID if triggered by an incoming call, a Message SID if triggered by an incoming message, a Request SID if triggered by a REST API request, and so on.
+                    def initiated_by
+                        @properties['initiated_by']
                     end
                     
                     ##
